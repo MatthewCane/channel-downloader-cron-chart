@@ -1,0 +1,12 @@
+channels:
+  - name: Tom Scott
+    handle: '@TomScottGo'
+  - name: Linus Tech Tips
+    handle: '@LinusTechTips'
+  - name: AjranCodes
+    handle: '@ArjanCodes'
+
+global_config:
+  hostpath: /videos
+  cronSchedule: "0 6 * * *"
+  # quality: 'bv*[height<=480]+ba'

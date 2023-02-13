@@ -1,0 +1,39 @@
+{{- range $job := .Values.channels }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: channel-downloader-{{ $job.name | kebabcase }}
+spec:
+  schedule: {{ default "0 6 * * *" $.Values.global_config.cronSchedule }}
+  startingDeadlineSeconds: 1800
+  jobTemplate:
+    metadata:
+      name: channel-downloader
+    spec:
+      template:
+        spec:
+          containers:
+          - name: channel-downloader-{{ $job.name | kebabcase }}
+            image: jeeaaasustest/youtube-dl:v2023.01.06
+            command: 
+              - sh
+              - -c
+              - |
+                yt-dlp -f {{ default "bestvideo*+bestaudio/best" $.Values.global_config.quality }} \
+                -P temp:. \
+                --dateafter {{ default "today-1week" $job.dateAfter }} \
+                --break-on-reject --embed-thumbnail --embed-metadata \
+                --download-archive /videos/archives/{{ $job.name | kebabcase }}.txt \
+                https://www.youtube.com/{{ $job.handle }}/videos \
+                -o '/videos/%(channel)s/%(title)s.%(ext)s'
+            volumeMounts:
+              - name: video-storage
+                mountPath: /videos
+          restartPolicy: OnFailure
+          activeDeadlineSeconds: 3600
+          volumes:
+            - name: video-storage
+              hostPath:
+                path: {{ $.Values.global_config.hostpath }}
+---
+{{- end }}
