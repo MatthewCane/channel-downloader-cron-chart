@@ -14,9 +14,8 @@ Additional customisation will be added.
 
 Replace the first part of the `mount` command with whatever path you'd like the videos to end up in.
 
-1. `minikube start`
-2. `minikube mount $HOME/Movies/YouTube:/videos`
-3. `helm upgrade --install channel-downloader .`
+1.`minikube start --mount-string="$HOME/Movies/YouTube:/videos" --mount` (Replace `$HOME/Movies/YouTube` with wherever you want the videos saved)
+2. `helm upgrade --install channel-downloader .`
 
 ## Credits
 
