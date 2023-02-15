@@ -24,7 +24,7 @@ spec:
                 -P temp:/tmp \
                 --merge-output-format mp4 \
                 --dateafter {{ default "today-1week" $job.dateAfter }} \
-                --break-on-reject --embed-thumbnail --embed-metadata \
+                --embed-thumbnail --embed-metadata \
                 --download-archive /videos/archives/{{ $job.name | kebabcase }}.txt \
                 https://www.youtube.com/{{ $job.handle }}/videos \
                 -o '/videos/%(channel)s/%(title)s.%(ext)s'
