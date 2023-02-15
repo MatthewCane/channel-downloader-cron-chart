@@ -20,7 +20,8 @@ spec:
               - -c
               - |
                 yt-dlp -f {{ default "bestvideo*+bestaudio/best" $.Values.global_config.quality }} \
-                -P temp:. \
+                -P temp:/tmp \
+                --merge-output-format mp4 \
                 --dateafter {{ default "today-1week" $job.dateAfter }} \
                 --break-on-reject --embed-thumbnail --embed-metadata \
                 --download-archive /videos/archives/{{ $job.name | kebabcase }}.txt \
