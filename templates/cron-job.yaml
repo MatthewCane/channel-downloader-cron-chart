@@ -19,6 +19,7 @@ spec:
               - sh
               - -c
               - |
+                mkdir -p /videos/archives &&
                 yt-dlp -f {{ default "bestvideo*+bestaudio/best" $.Values.global_config.quality }} \
                 -P temp:/tmp \
                 --merge-output-format mp4 \
