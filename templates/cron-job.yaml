@@ -6,6 +6,7 @@ metadata:
 spec:
   schedule: {{ default "0 6 * * *" $.Values.global_config.cronSchedule }}
   startingDeadlineSeconds: 1800
+  concurrencyPolicy: Replace
   jobTemplate:
     metadata:
       name: channel-downloader
@@ -23,6 +24,7 @@ spec:
                 yt-dlp -f {{ default "bestvideo*+bestaudio/best" $.Values.global_config.quality }} \
                 -P temp:/tmp \
                 --merge-output-format mp4 \
+                --extractor-args youtubetab:approximate_date \
                 --dateafter {{ default "today-1week" $job.dateAfter }} \
                 --embed-thumbnail --embed-metadata \
                 --download-archive /videos/archives/{{ $job.name | kebabcase }}.txt \
@@ -35,7 +37,11 @@ spec:
           activeDeadlineSeconds: 3600
           volumes:
             - name: video-storage
+              {{- if $.Values.volume_config }}
+              {{- toYaml $.Values.volume_config | nindent 14 }}
+              {{- else }}
               hostPath:
-                path: {{ $.Values.global_config.hostpath }}
+                path: /videos
+              {{- end }}
 ---
 {{- end }}
